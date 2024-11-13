@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event RSVP</title>
+    <link rel="stylesheet" href="css/rsvp-form.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="form-title">RSVP for the Event</h1>
+        <div class="form-container">
+          <form id="rsvp-form">
+            <div class="form-group">
+              <label for="first-name" class="form-label">First name</label>
+              <input type="text" id="first-name" class="form-input" required />
+            </div>
+        
+            <div class="form-group">
+              <label for="last-name" class="form-label">Last name</label>
+              <input type="text" id="last-name" class="form-input" required />
+            </div>
+        
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-input" required />
+            </div>
+        
+            <div class="form-group">
+              <label for="country" class="form-label">Country</label>
+              <input type="text" id="country" class="form-input" required />
+            </div>
+        
+            <div class="form-group">
+              <label for="city" class="form-label">City</label>
+              <input type="text" id="city" class="form-input" required />
+            </div>
+        
+            <div class="form-group">
+              <label for="pronoun" class="form-label">My preferred pronoun is...</label>
+              <select id="pronoun" class="form-input" required>
+                <option value="">Select pronoun</option>
+                <option value="He/Him">He/Him</option>
+                <option value="She/Her">She/Her</option>
+                <option value="They/Them">They/Them</option>
+              </select>
+            </div>
+        
+            <div class="form-terms">
+              <input type="checkbox" id="terms" class="form-checkbox" required />
+              <label for="terms" class="form-terms-label">
+                By checking this box, I confirm that I have read and agree to the Event Participation Terms
+               </label>
+            </div>
+        
+            <button type="submit" class="form-button submit-button">RSVP</button>
+          </form>
+          
+          <script>
+            document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Create form data from user inputs
+                const formData = {
+                    firstName: document.getElementById('first-name').value,
+                    lastName: document.getElementById('last-name').value,
+                    email: document.getElementById('email').value,
+                    country: document.getElementById('country').value,
+                    city: document.getElementById('city').value,
+                    pronoun: document.getElementById('pronoun').value
+                };
+
+                try {
+                    const response = await fetch('http://localhost:5000/api/rsvp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (response.ok) {
+                        alert('RSVP successful!');
+                        window.location.href = 'index.html'; // Redirect after success
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error: ${errorData.message || 'Failed to RSVP'}`);
+                    }
+                } catch (error) {
+                    console.error("Error submitting RSVP:", error);
+                    alert('Error submitting RSVP. Please try again.');
+                }
+            });
+          </script>
+</body>
+</html>
